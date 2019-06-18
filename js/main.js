@@ -14,6 +14,10 @@ var MIN_LIKES = 15;
 var MAX_LIKES = 200;
 var AVATARS_COUNT = 6;
 
+var getRandomNumber = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 var generateNaturalSequence = function (count) {
   var array = [];
   for (var i = 0; i < count; i++) {
@@ -58,10 +62,6 @@ var generateComents = function (count) {
     };
   }
   return comments;
-};
-
-var getRandomNumber = function (min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
 var generatePhotos = function (count) {
