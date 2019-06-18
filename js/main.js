@@ -1,23 +1,38 @@
 'use strict';
 
-var COMMENT_OPTIONS = ['Всё отлично!', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.'];
+var COMMENT_OPTIONS = ['Всё отлично!',
+'В целом всё неплохо. Но не всё.',
+'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.',
+'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
+'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
+'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var PHOTO_NUMBER = 25;
 var NAME_OPTIONS = ['Артем', 'Виктор', 'Вильям', 'Анна', 'Джессика', 'Бог Кекс'];
+var MIN_COMMENTS = 0;
+var MAX_COMMENTS = 50;
+var MIN_LIKES = 15;
+var MAX_LIKES = 200;
+var AVATARS_COUNT = 6;
 
-var doOneTwoThree = function (count) {
+var generateNaturalSequence = function (count) {
   var array = [];
   for (var i = 0; i < count; i++) {
-    array[i] = i + 1;
+    // array[i] = i + 1;
+    array.push(i + 1);
   }
   return array;
 };
 
-var compareRandom = function (_a, _b) {
-  return Math.random() - 0.5;
-};
-
 var shuffleArray = function (array) {
-  return array.sort(compareRandom);
+  var temp;
+  var j;
+  for (var i = array.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i + 1));
+    temp = array[j];
+    array[j] = array[i];
+    array[i] = temp;
+  }
+  return array;
 };
 
 var getRandomOfArray = function (array) {
@@ -25,17 +40,41 @@ var getRandomOfArray = function (array) {
   return array[rand];
 };
 
+var getCommentText = function (array) {
+  var message = getRandomOfArray(array);
+  if (Math.round(Math.random()) === 1) {
+    message += ' ' + getRandomOfArray(array);
+  }
+  return message;
+};
+
+var generateComents = function (count) {
+  var comments = [];
+  for (var i = 0; i < count; i++) {
+    comments[i] = {
+      avatar: 'img/avatar-' + getRandomOfArray(generateNaturalSequence(AVATARS_COUNT)) + '.svg',
+      message: getCommentText(COMMENT_OPTIONS),
+      name: getRandomOfArray(NAME_OPTIONS)
+    };
+  }
+  return comments;
+};
+
+var getRandomNumber = function (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
+
 var generatePhotos = function (count) {
   var photos = [];
-  var shuffledNumbers = shuffleArray(doOneTwoThree(count));
+  var shuffledNumbers = shuffleArray(generateNaturalSequence(count));
   for (var i = 0; i < count; i++) {
     photos[i] = {
       url: 'photos/' + shuffledNumbers[i] + '.jpg',
-      likes: Math.round(Math.random() * 185) + 15,
-      comments: getRandomOfArray(COMMENT_OPTIONS),
-      names: getRandomOfArray(NAME_OPTIONS)
+      likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
+      comments: generateComents(getRandomNumber(MIN_COMMENTS, MAX_COMMENTS))
     };
   }
+  console.log(photos);
   return photos;
 };
 
@@ -46,7 +85,7 @@ var generatePhotoNodes = function (photoData) {
     photoElements[i] = similarPhotoTemplate.cloneNode(true);
     photoElements[i].querySelector('.picture__img').src = photoData[i].url;
     photoElements[i].querySelector('.picture__likes').textContent = photoData[i].likes;
-    photoElements[i].querySelector('.picture__comments').textContent = photoData[i].comments;
+    photoElements[i].querySelector('.picture__comments').textContent = photoData[i].comments.length;
   }
   return photoElements;
 };
