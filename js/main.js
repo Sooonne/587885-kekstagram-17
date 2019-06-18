@@ -5,20 +5,20 @@ var PHOTO_NUMBER = 25;
 var NAME_OPTIONS = ['Артем', 'Виктор', 'Вильям', 'Анна', 'Джессика', 'Бог Кекс'];
 
 var doOneTwoThree = function (count) {
-  var array = []
+  var array = [];
   for (var i = 0; i < count; i++) {
     array[i] = i + 1;
   }
   return array;
 };
 
-var compareRandom = function (a, b) {
+var compareRandom = function (_a, _b) {
   return Math.random() - 0.5;
-}
+};
 
 var shuffleArray = function (array) {
   return array.sort(compareRandom);
-}
+};
 
 var getRandomOfArray = function (array) {
   var rand = Math.floor(Math.random() * array.length);
@@ -28,14 +28,13 @@ var getRandomOfArray = function (array) {
 var generatePhotos = function (count) {
   var photos = [];
   var shuffledNumbers = shuffleArray(doOneTwoThree(count));
-  console.log(shuffledNumbers);
-  for (var i = 0; i < count; i++ ) {
+  for (var i = 0; i < count; i++) {
     photos[i] = {
       url: 'photos/' + shuffledNumbers[i] + '.jpg',
       likes: Math.round(Math.random() * 185) + 15,
       comments: getRandomOfArray(COMMENT_OPTIONS),
       names: getRandomOfArray(NAME_OPTIONS)
-    }
+    };
   }
   return photos;
 };
@@ -50,7 +49,7 @@ var generatePhotoNodes = function (photoData) {
     photoElements[i].querySelector('.picture__comments').textContent = photoData[i].comments;
   }
   return photoElements;
-}
+};
 
 var renderPhotos = function () {
   var similarPhotoElement = document.querySelector('.pictures');
@@ -60,7 +59,7 @@ var renderPhotos = function () {
     fragment.appendChild(photoNodes[i]);
   }
   similarPhotoElement.appendChild(fragment);
-}
+};
 
 renderPhotos();
 
