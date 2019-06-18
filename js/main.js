@@ -74,7 +74,6 @@ var generatePhotos = function (count) {
       comments: generateComents(getRandomNumber(MIN_COMMENTS, MAX_COMMENTS))
     };
   }
-  console.log(photos);
   return photos;
 };
 
