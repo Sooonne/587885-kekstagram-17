@@ -101,3 +101,112 @@ var renderPhotos = function () {
 
 renderPhotos();
 
+// new task
+// open and close Edit popup
+var ESC_KEYCODE = 27;
+
+var imgUpload = document.querySelector('.img-upload');
+var uploadFile = imgUpload.querySelector('#upload-file');
+var popupEdit = imgUpload.querySelector('.img-upload__overlay');
+var uploadCancel = imgUpload.querySelector('#upload-cancel');
+
+var onpopupEditKeydown = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    // to prevent macOS close full screen
+    evt.preventDefault();
+    closepopupEdit();
+  }
+};
+
+var openpopupEdit = function () {
+  popupEdit.classList.remove('hidden');
+  document.addEventListener('keydown', onpopupEditKeydown);
+};
+
+var closepopupEdit = function () {
+  popupEdit.classList.add('hidden');
+  uploadFile.value = null;
+  document.removeEventListener('keydown', onpopupEditKeydown);
+};
+
+uploadFile.addEventListener('change', openpopupEdit);
+uploadCancel.addEventListener('click', closepopupEdit);
+
+// edit image scale
+var minDecreaseScale = 25;
+var maxIncreaseScale = 75;
+var scaleStep = 25;
+var buttonDecreaseSize = popupEdit.querySelector('.scale__control--smaller');
+var buttonIncreaseSize = popupEdit.querySelector('.scale__control--bigger');
+var scaleControl = popupEdit.querySelector('.scale__control--value');
+var editingImage = popupEdit.querySelector('.img-upload__preview img');
+
+var decreaseSize = function () {
+  var scaleCurrentNumber = parseInt(scaleControl.value, 10);
+  if (scaleCurrentNumber > minDecreaseScale) {
+    scaleCurrentNumber -= scaleStep;
+    scaleControl.value = scaleCurrentNumber + '%';
+    editingImage.style.transform = 'scale(' + scaleCurrentNumber / 100 + ')';
+  }
+};
+
+var increaseSize = function () {
+  var scaleCurrentNumber = parseInt(scaleControl.value, 10);
+  if (scaleCurrentNumber <= maxIncreaseScale) {
+    scaleCurrentNumber += scaleStep;
+    scaleControl.value = scaleCurrentNumber + '%';
+    editingImage.style.transform = 'scale(' + scaleCurrentNumber / 100 + ')';
+  }
+};
+
+buttonDecreaseSize.addEventListener('click', decreaseSize);
+buttonIncreaseSize.addEventListener('click', increaseSize);
+
+//change effects
+var FILTER_OPTIONS = {
+  chrome: {
+    type: 'grayscale',
+    min: 0,
+    max: 1
+  },
+  sepia: {
+    type: 'sepia',
+    min: 0,
+    max: 1
+  },
+  marvin: {
+    type: 'invert',
+    min: '0%',
+    max: '100%'
+  },
+  phobos: {
+    type: 'blur',
+    min: '0px',
+    max: '3px'
+  },
+  heat: {
+    type: 'brightness',
+    min: 1,
+    max: 3
+  }
+};
+var effects = popupEdit.querySelectorAll('.effects__radio');
+var effectsPin = popupEdit.querySelector('.effect-level__pin');
+
+for (var i = 0; i < effects.length; i++) {
+  effects[i].addEventListener('change', function (evt) {
+    editingImage.classList = ['effects__preview--' + evt.currentTarget.value];
+  });
+}
+
+effectsPin.addEventListener('mouseup', function(evt) {
+  debugger;
+  // evt.target.offsetLeft - left from parent
+ // evt.target.offsetLeft / evt.target.parentElement.offsetWidth -- width of effects
+});
+
+// this code dont have last point of task now
+
+
+
+
