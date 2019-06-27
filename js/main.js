@@ -167,27 +167,32 @@ var FILTER_OPTIONS = {
   chrome: {
     type: 'grayscale',
     min: 0,
-    max: 1
+    max: 1,
+    suffix: '',
   },
   sepia: {
     type: 'sepia',
     min: 0,
-    max: 1
+    max: 1,
+    suffix: '',
   },
   marvin: {
     type: 'invert',
-    min: '0%',
-    max: '100%'
+    min: 0,
+    max: 100,
+    suffix: '%',
   },
   phobos: {
     type: 'blur',
-    min: '0px',
-    max: '3px'
+    min: 0,
+    max: 3,
+    suffix: 'px',
   },
   heat: {
     type: 'brightness',
     min: 1,
-    max: 3
+    max: 3,
+    suffix: '',
   }
 };
 var effects = popupEdit.querySelectorAll('.effects__radio');
@@ -196,17 +201,27 @@ var effectsPin = popupEdit.querySelector('.effect-level__pin');
 for (var i = 0; i < effects.length; i++) {
   effects[i].addEventListener('change', function (evt) {
     editingImage.classList = ['effects__preview--' + evt.currentTarget.value];
+    editingImage.style = {};
+    var currentEffect = popupEdit.querySelector('input[name="effect"]:checked').value; // none || chrome etc
+    var slideBar = document.querySelector('.img-upload__effect-level');
+    slideBar.classList.remove('hidden');
+    if (currentEffect === 'none') {
+      slideBar.classList.add('hidden');
+    }
   });
 }
 
-effectsPin.addEventListener('mouseup', function(evt) {
-  debugger;
-  // evt.target.offsetLeft - left from parent
- // evt.target.offsetLeft / evt.target.parentElement.offsetWidth -- width of effects
+
+effectsPin.addEventListener('mouseup', function (evt) {
+  var currentEffect = popupEdit.querySelector('input[name="effect"]:checked').value; // none || chrome etc
+  if (currentEffect === 'none') {
+    return;
+  }
+  var effectsLevelLineWidth = evt.target.parentElement.offsetWidth; // width parent
+  var effectsPinLevel = evt.target.offsetLeft; // left from parent
+  var currentEffectProperties = FILTER_OPTIONS[currentEffect];
+  var currentProportion = effectsPinLevel / effectsLevelLineWidth;
+  var currentEffectLevel = (currentEffectProperties.max - currentEffectProperties.min) * currentProportion + currentEffectProperties.min;
+  editingImage.style.filter = currentEffectProperties.type + '(' + currentEffectLevel + currentEffectProperties.suffix + ')';
 });
-
-// this code dont have last point of task now
-
-
-
 
