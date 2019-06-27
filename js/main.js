@@ -162,7 +162,7 @@ var increaseSize = function () {
 buttonDecreaseSize.addEventListener('click', decreaseSize);
 buttonIncreaseSize.addEventListener('click', increaseSize);
 
-//change effects
+// change effects
 var FILTER_OPTIONS = {
   chrome: {
     type: 'grayscale',
