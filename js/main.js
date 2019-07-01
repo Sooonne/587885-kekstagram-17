@@ -120,6 +120,12 @@ var onPopupEditKeydown = function (evt) {
   }
 };
 
+commentTextarea.addEventListener('invalid', function() {
+  if (commentTextarea.validity.tooLong) {
+    commentTextarea.setCustomValidity('Комментарий не должен быть длиннее 140 символов');
+  }
+});
+
 var onUploadFileChange = function () {
   popupEdit.classList.remove('hidden');
   document.addEventListener('keydown', onPopupEditKeydown);
