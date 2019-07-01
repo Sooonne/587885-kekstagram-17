@@ -203,6 +203,7 @@ effect.addEventListener('change', function (evt) {
   if (currentEffect === 'none') {
     slideBar.classList.add('hidden');
   }
+  scaleControl.value = MAX_INCREASE_SCALE + '%';
 });
 
 effectsPin.addEventListener('mouseup', function (evt) {
