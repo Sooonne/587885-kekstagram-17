@@ -228,9 +228,6 @@ var defineEffect = function (evt) {
 //   });
 // }
 
-
-
-
 effectsPin.addEventListener('mouseup', function (evt) {
   // var currentEffect = popupEdit.querySelector('input[name="effect"]:checked').value; // none || chrome etc
   if (currentEffect === 'none') {
