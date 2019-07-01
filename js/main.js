@@ -104,14 +104,13 @@ renderPhotos();
 // new task
 // open and close Edit popup
 var ESC_KEYCODE = 27;
-
 var imgUpload = document.querySelector('.img-upload');
 var uploadFile = imgUpload.querySelector('#upload-file');
 var popupEdit = imgUpload.querySelector('.img-upload__overlay');
 var uploadCancel = imgUpload.querySelector('#upload-cancel');
+var commentTextarea = popupEdit.querySelector('textarea[name="description"]');
 
-var onpopupEditKeydown = function (evt) {
-  var commentTextarea = popupEdit.querySelector('textarea[name="description"]');
+var onPopupEditKeydown = function (evt) {
   if (evt.keyCode === ESC_KEYCODE)   {
     // to prevent macOS close full screen
     evt.preventDefault();
@@ -121,49 +120,43 @@ var onpopupEditKeydown = function (evt) {
   }
 };
 
-var openpopupEdit = function () {
+var onUploadFileChange = function () {
   popupEdit.classList.remove('hidden');
-  document.addEventListener('keydown', onpopupEditKeydown);
+  document.addEventListener('keydown', onPopupEditKeydown);
 };
 
 var closePopupEdit = function () {
   popupEdit.classList.add('hidden');
   uploadFile.value = null;
-  document.removeEventListener('keydown', onpopupEditKeydown);
+  document.removeEventListener('keydown', onPopupEditKeydown);
 };
 
-uploadFile.addEventListener('change', openpopupEdit);
-uploadCancel.addEventListener('click', closePopupEdit);
+uploadFile.addEventListener('change', onUploadFileChange);
+uploadCancel.addEventListener('click', function () {
+  closePopupEdit();
+});
 
 // edit image scale
-var minDecreaseScale = 25;
-var maxIncreaseScale = 75;
-var scaleStep = 25;
+var MIN_DECREASE_SCALE = 0;
+var MAX_INCREASE_SCALE = 100;
+var SCALE_STEP = 25;
 var buttonDecreaseSize = popupEdit.querySelector('.scale__control--smaller');
 var buttonIncreaseSize = popupEdit.querySelector('.scale__control--bigger');
 var scaleControl = popupEdit.querySelector('.scale__control--value');
 var editingImage = popupEdit.querySelector('.img-upload__preview img');
 
-var decreaseSize = function () {
+var onChangeSizeButtonClick = function (evt) {
+  var scaleStepCurrent = evt.target === buttonIncreaseSize ? SCALE_STEP : -SCALE_STEP;
   var scaleCurrentNumber = parseInt(scaleControl.value, 10);
-  if (scaleCurrentNumber > minDecreaseScale) {
-    scaleCurrentNumber -= scaleStep;
+  if ((scaleCurrentNumber + scaleStepCurrent > MIN_DECREASE_SCALE) && (scaleCurrentNumber + scaleStepCurrent <= MAX_INCREASE_SCALE)) {
+    scaleCurrentNumber += scaleStepCurrent;
     scaleControl.value = scaleCurrentNumber + '%';
     editingImage.style.transform = 'scale(' + scaleCurrentNumber / 100 + ')';
   }
 };
 
-var increaseSize = function () {
-  var scaleCurrentNumber = parseInt(scaleControl.value, 10);
-  if (scaleCurrentNumber <= maxIncreaseScale) {
-    scaleCurrentNumber += scaleStep;
-    scaleControl.value = scaleCurrentNumber + '%';
-    editingImage.style.transform = 'scale(' + scaleCurrentNumber / 100 + ')';
-  }
-};
-
-buttonDecreaseSize.addEventListener('click', decreaseSize);
-buttonIncreaseSize.addEventListener('click', increaseSize);
+buttonDecreaseSize.addEventListener('click', onChangeSizeButtonClick);
+buttonIncreaseSize.addEventListener('click', onChangeSizeButtonClick);
 
 // change effects
 var FILTER_OPTIONS = {
@@ -198,38 +191,19 @@ var FILTER_OPTIONS = {
     suffix: '',
   }
 };
-// var effects = popupEdit.querySelectorAll('.effects__radio');
 var effectsPin = popupEdit.querySelector('.effect-level__pin');
-var effects = popupEdit.querySelector('.effects');
+var effect = popupEdit.querySelector('.effects');
 var currentEffect;
-effects.addEventListener('change', function (evt) {
-  currentEffect = defineEffect(evt);
-  editingImage.classList = ['effects__preview--' + currentEffect];
+var slideBar = document.querySelector('.img-upload__effect-level');
+effect.addEventListener('change', function (evt) {
+  currentEffect = evt.target.value;
+  editingImage.className = ['effects__preview--' + currentEffect];
   editingImage.style = {};
-  // var currentEffect = popupEdit.querySelector('input[name="effect"]:checked').value; // none || chrome etc
-  var slideBar = document.querySelector('.img-upload__effect-level');
   slideBar.classList.remove('hidden');
   if (currentEffect === 'none') {
     slideBar.classList.add('hidden');
   }
 });
-
-var defineEffect = function (evt) {
-  return evt.target.value;
-};
-
-// for (var i = 0; i < effects.length; i++) {
-//   effects[i].addEventListener('change', function (evt) {
-//     editingImage.classList = ['effects__preview--' + evt.currentTarget.value];
-//     editingImage.style = {};
-//     var currentEffect = popupEdit.querySelector('input[name="effect"]:checked').value; // none || chrome etc
-//     var slideBar = document.querySelector('.img-upload__effect-level');
-//     slideBar.classList.remove('hidden');
-//     if (currentEffect === 'none') {
-//       slideBar.classList.add('hidden');
-//     }
-//   });
-// }
 
 effectsPin.addEventListener('mouseup', function (evt) {
   // var currentEffect = popupEdit.querySelector('input[name="effect"]:checked').value; // none || chrome etc
@@ -243,4 +217,3 @@ effectsPin.addEventListener('mouseup', function (evt) {
   var currentEffectLevel = (currentEffectProperties.max - currentEffectProperties.min) * currentProportion + currentEffectProperties.min;
   editingImage.style.filter = currentEffectProperties.type + '(' + currentEffectLevel + currentEffectProperties.suffix + ')';
 });
-
