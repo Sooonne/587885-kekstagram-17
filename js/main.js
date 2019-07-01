@@ -111,10 +111,13 @@ var popupEdit = imgUpload.querySelector('.img-upload__overlay');
 var uploadCancel = imgUpload.querySelector('#upload-cancel');
 
 var onpopupEditKeydown = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
+  var commentTextarea = popupEdit.querySelector('textarea[name="description"]');
+  if (evt.keyCode === ESC_KEYCODE)   {
     // to prevent macOS close full screen
     evt.preventDefault();
-    closePopupEdit();
+    if (document.activeElement !== commentTextarea) {
+      closePopupEdit();
+    }
   }
 };
 
