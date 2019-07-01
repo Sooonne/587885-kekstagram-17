@@ -114,7 +114,7 @@ var onpopupEditKeydown = function (evt) {
   if (evt.keyCode === ESC_KEYCODE) {
     // to prevent macOS close full screen
     evt.preventDefault();
-    closepopupEdit();
+    closePopupEdit();
   }
 };
 
@@ -123,14 +123,14 @@ var openpopupEdit = function () {
   document.addEventListener('keydown', onpopupEditKeydown);
 };
 
-var closepopupEdit = function () {
+var closePopupEdit = function () {
   popupEdit.classList.add('hidden');
   uploadFile.value = null;
   document.removeEventListener('keydown', onpopupEditKeydown);
 };
 
 uploadFile.addEventListener('change', openpopupEdit);
-uploadCancel.addEventListener('click', closepopupEdit);
+uploadCancel.addEventListener('click', closePopupEdit);
 
 // edit image scale
 var minDecreaseScale = 25;
@@ -195,25 +195,44 @@ var FILTER_OPTIONS = {
     suffix: '',
   }
 };
-var effects = popupEdit.querySelectorAll('.effects__radio');
+// var effects = popupEdit.querySelectorAll('.effects__radio');
 var effectsPin = popupEdit.querySelector('.effect-level__pin');
+var effects = popupEdit.querySelector('.effects');
+var currentEffect;
+effects.addEventListener('change', function (evt) {
+  currentEffect = defineEffect(evt);
+  editingImage.classList = ['effects__preview--' + currentEffect];
+  editingImage.style = {};
+  // var currentEffect = popupEdit.querySelector('input[name="effect"]:checked').value; // none || chrome etc
+  var slideBar = document.querySelector('.img-upload__effect-level');
+  slideBar.classList.remove('hidden');
+  if (currentEffect === 'none') {
+    slideBar.classList.add('hidden');
+  }
+});
 
-for (var i = 0; i < effects.length; i++) {
-  effects[i].addEventListener('change', function (evt) {
-    editingImage.classList = ['effects__preview--' + evt.currentTarget.value];
-    editingImage.style = {};
-    var currentEffect = popupEdit.querySelector('input[name="effect"]:checked').value; // none || chrome etc
-    var slideBar = document.querySelector('.img-upload__effect-level');
-    slideBar.classList.remove('hidden');
-    if (currentEffect === 'none') {
-      slideBar.classList.add('hidden');
-    }
-  });
-}
+var defineEffect = function (evt) {
+  return evt.target.value;
+};
+
+// for (var i = 0; i < effects.length; i++) {
+//   effects[i].addEventListener('change', function (evt) {
+//     editingImage.classList = ['effects__preview--' + evt.currentTarget.value];
+//     editingImage.style = {};
+//     var currentEffect = popupEdit.querySelector('input[name="effect"]:checked').value; // none || chrome etc
+//     var slideBar = document.querySelector('.img-upload__effect-level');
+//     slideBar.classList.remove('hidden');
+//     if (currentEffect === 'none') {
+//       slideBar.classList.add('hidden');
+//     }
+//   });
+// }
+
+
 
 
 effectsPin.addEventListener('mouseup', function (evt) {
-  var currentEffect = popupEdit.querySelector('input[name="effect"]:checked').value; // none || chrome etc
+  // var currentEffect = popupEdit.querySelector('input[name="effect"]:checked').value; // none || chrome etc
   if (currentEffect === 'none') {
     return;
   }
