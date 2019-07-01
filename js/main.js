@@ -111,7 +111,7 @@ var uploadCancel = imgUpload.querySelector('#upload-cancel');
 var commentTextarea = popupEdit.querySelector('textarea[name="description"]');
 
 var onPopupEditKeydown = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE)   {
+  if (evt.keyCode === ESC_KEYCODE) {
     // to prevent macOS close full screen
     evt.preventDefault();
     if (document.activeElement !== commentTextarea) {
