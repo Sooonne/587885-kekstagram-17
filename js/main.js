@@ -120,7 +120,7 @@ var onPopupEditKeydown = function (evt) {
   }
 };
 
-commentTextarea.addEventListener('invalid', function() {
+commentTextarea.addEventListener('invalid', function () {
   if (commentTextarea.validity.tooLong) {
     commentTextarea.setCustomValidity('Комментарий не должен быть длиннее 140 символов');
   }
@@ -129,6 +129,9 @@ commentTextarea.addEventListener('invalid', function() {
 var onUploadFileChange = function () {
   popupEdit.classList.remove('hidden');
   document.addEventListener('keydown', onPopupEditKeydown);
+  currentEffect = popupEdit.querySelector('input[name="effect"]:checked').value;
+  resetStyle();
+  setEffectsDepth();
 };
 
 var closePopupEdit = function () {
@@ -198,9 +201,12 @@ var FILTER_OPTIONS = {
   }
 };
 var effectsPin = popupEdit.querySelector('.effect-level__pin');
+var effectsLine = popupEdit.querySelector('.effect-level__line');
 var effect = popupEdit.querySelector('.effects');
 var currentEffect;
 var slideBar = document.querySelector('.img-upload__effect-level');
+var effectsDepth = popupEdit.querySelector('.effect-level__depth');
+
 effect.addEventListener('change', function (evt) {
   currentEffect = evt.target.value;
   editingImage.className = ['effects__preview--' + currentEffect];
@@ -209,18 +215,78 @@ effect.addEventListener('change', function (evt) {
   if (currentEffect === 'none') {
     slideBar.classList.add('hidden');
   }
-  scaleControl.value = MAX_INCREASE_SCALE + '%';
+  resetStyle();
 });
 
-effectsPin.addEventListener('mouseup', function (evt) {
-  // var currentEffect = popupEdit.querySelector('input[name="effect"]:checked').value; // none || chrome etc
+// new task
+//  drag slider
+
+effectsPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startPosition = evt.clientX;
+
+  var onPinMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    var shift = startPosition - moveEvt.clientX;
+    startPosition = moveEvt.clientX;
+    effectsPin.style.left = calculatePinPosition(effectsPin.offsetLeft - shift, 0, effectsLine.offsetWidth) + 'px';
+    setEffectsDepth();
+    effectsDepth.style.width = effectsPin.offsetLeft + 'px';
+
+  };
+
+  var onPinMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+    setEffectsDepth();
+    // if (currentEffect === 'none') {
+    //   return;
+    // }
+    // var effectsLevelLineWidth = upEvt.target.parentElement.offsetWidth; // width parent
+    // var effectsPinLevel = upEvt.target.offsetLeft; // left from parent
+    // var currentEffectProperties = FILTER_OPTIONS[currentEffect];
+    // var currentProportion = effectsPinLevel / effectsLevelLineWidth;
+    // var currentEffectLevel = (currentEffectProperties.max - currentEffectProperties.min) * currentProportion + currentEffectProperties.min;
+    // editingImage.style.filter = currentEffectProperties.type + '(' + currentEffectLevel + currentEffectProperties.suffix + ')';
+
+    document.removeEventListener('mousemove', onPinMouseMove);
+    document.removeEventListener('mouseup', onPinMouseUp);
+  };
+
+  document.addEventListener('mousemove', onPinMouseMove);
+  document.addEventListener('mouseup', onPinMouseUp);
+});
+
+var calculatePinPosition = function (position, min, max) {
+  if (position < min) {
+    return min;
+  } else if (position > max) {
+    return max;
+  }
+  return position;
+};
+
+// var effectsLevelLineWidth = evt.target.parentElement.offsetWidth; // width parent
+// var effectsPinLevel = evt.target.offsetLeft; // left from parent
+// var currentEffectProperties = FILTER_OPTIONS[currentEffect];
+// var currentProportion = effectsPinLevel / effectsLevelLineWidth;
+// var currentEffectLevel = (currentEffectProperties.max - currentEffectProperties.min) * currentProportion + currentEffectProperties.min;
+// editingImage.style.filter = currentEffectProperties.type + '(' + currentEffectLevel + currentEffectProperties.suffix + ')';
+
+var setEffectsDepth = function () {
   if (currentEffect === 'none') {
     return;
   }
-  var effectsLevelLineWidth = evt.target.parentElement.offsetWidth; // width parent
-  var effectsPinLevel = evt.target.offsetLeft; // left from parent
+  var effectsLevelLineWidth = effectsLine.offsetWidth; // width parent
+  var effectsPinLevel = effectsPin.offsetLeft; // left from parent
   var currentEffectProperties = FILTER_OPTIONS[currentEffect];
   var currentProportion = effectsPinLevel / effectsLevelLineWidth;
   var currentEffectLevel = (currentEffectProperties.max - currentEffectProperties.min) * currentProportion + currentEffectProperties.min;
   editingImage.style.filter = currentEffectProperties.type + '(' + currentEffectLevel + currentEffectProperties.suffix + ')';
-});
+};
+
+var resetStyle = function () {
+  scaleControl.value = MAX_INCREASE_SCALE + '%';
+  effectsPin.style.left = '100%'; // effectsLine.offsetWidth + 'px'; // можно ставить 100%
+  effectsDepth.style.width = '100%';
+};
