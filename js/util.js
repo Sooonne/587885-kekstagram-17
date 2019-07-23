@@ -2,6 +2,8 @@
 
 (function () {
   var ESC_KEYCODE = 27;
+  var MAX_HASHTAG_LENGTH = 20;
+  var MAX_HASHTAG_NUMBER = 5;
 
   window.util = {
     getRandomNumber: function (min, max) {
@@ -34,6 +36,12 @@
     },
 
     ESC_KEYCODE: ESC_KEYCODE,
+    MAX_HASHTAG_LENGTH: MAX_HASHTAG_LENGTH,
+    MAX_HASHTAG_NUMBER: MAX_HASHTAG_NUMBER,
+
+    isFirstAppearance: function (value, index, self) {
+      return self.indexOf(value) === index;
+    },
   };
 })();
 
