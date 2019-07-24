@@ -35,7 +35,6 @@
   var onFullPictureKeydown = function (evt) {
     if (evt.keyCode === window.util.ESC_KEYCODE) {
       evt.preventDefault();
-      // close function
       closeFullPicture();
     }
   };
