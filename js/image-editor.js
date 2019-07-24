@@ -38,12 +38,11 @@
   var MAX_INCREASE_SCALE = 100;
   var SCALE_STEP = 25;
 
+  var popupEdit = window.imageUploadCommon.popupEdit;
   var buttonDecreaseSize = popupEdit.querySelector('.scale__control--smaller');
   var buttonIncreaseSize = popupEdit.querySelector('.scale__control--bigger');
   var scaleControl = popupEdit.querySelector('.scale__control--value');
   var editingImage = popupEdit.querySelector('.img-upload__preview img');
-  var imgUpload = document.querySelector('.img-upload');
-  var popupEdit = imgUpload.querySelector('.img-upload__overlay');
   var effectsPin = popupEdit.querySelector('.effect-level__pin');
   var effectsLine = popupEdit.querySelector('.effect-level__line');
   var effect = popupEdit.querySelector('.effects');
