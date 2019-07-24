@@ -1,32 +1,7 @@
 'use strict';
 
 (function () {
-  var imgUpload = document.querySelector('.img-upload');
-  var popupEdit = imgUpload.querySelector('.img-upload__overlay');
 
-  // edit image scale
-  var MIN_DECREASE_SCALE = 0;
-  var MAX_INCREASE_SCALE = 100;
-  var SCALE_STEP = 25;
-  var buttonDecreaseSize = popupEdit.querySelector('.scale__control--smaller');
-  var buttonIncreaseSize = popupEdit.querySelector('.scale__control--bigger');
-  var scaleControl = popupEdit.querySelector('.scale__control--value');
-  var editingImage = popupEdit.querySelector('.img-upload__preview img');
-
-  var onChangeSizeButtonClick = function (evt) {
-    var scaleStepCurrent = evt.target === buttonIncreaseSize ? SCALE_STEP : -SCALE_STEP;
-    var scaleCurrentNumber = parseInt(scaleControl.value, 10);
-    if ((scaleCurrentNumber + scaleStepCurrent > MIN_DECREASE_SCALE) && (scaleCurrentNumber + scaleStepCurrent <= MAX_INCREASE_SCALE)) {
-      scaleCurrentNumber += scaleStepCurrent;
-      scaleControl.value = scaleCurrentNumber + '%';
-      editingImage.style.transform = 'scale(' + scaleCurrentNumber / 100 + ')';
-    }
-  };
-
-  buttonDecreaseSize.addEventListener('click', onChangeSizeButtonClick);
-  buttonIncreaseSize.addEventListener('click', onChangeSizeButtonClick);
-
-  // change effects
   var FILTER_OPTIONS = {
     chrome: {
       type: 'grayscale',
@@ -59,12 +34,35 @@
       suffix: '',
     }
   };
+  var MIN_DECREASE_SCALE = 0;
+  var MAX_INCREASE_SCALE = 100;
+  var SCALE_STEP = 25;
+
+  var buttonDecreaseSize = popupEdit.querySelector('.scale__control--smaller');
+  var buttonIncreaseSize = popupEdit.querySelector('.scale__control--bigger');
+  var scaleControl = popupEdit.querySelector('.scale__control--value');
+  var editingImage = popupEdit.querySelector('.img-upload__preview img');
+  var imgUpload = document.querySelector('.img-upload');
+  var popupEdit = imgUpload.querySelector('.img-upload__overlay');
   var effectsPin = popupEdit.querySelector('.effect-level__pin');
   var effectsLine = popupEdit.querySelector('.effect-level__line');
   var effect = popupEdit.querySelector('.effects');
   var currentEffect;
   var slideBar = document.querySelector('.img-upload__effect-level');
   var effectsDepth = popupEdit.querySelector('.effect-level__depth');
+
+  var onChangeSizeButtonClick = function (evt) {
+    var scaleStepCurrent = evt.target === buttonIncreaseSize ? SCALE_STEP : -SCALE_STEP;
+    var scaleCurrentNumber = parseInt(scaleControl.value, 10);
+    if ((scaleCurrentNumber + scaleStepCurrent > MIN_DECREASE_SCALE) && (scaleCurrentNumber + scaleStepCurrent <= MAX_INCREASE_SCALE)) {
+      scaleCurrentNumber += scaleStepCurrent;
+      scaleControl.value = scaleCurrentNumber + '%';
+      editingImage.style.transform = 'scale(' + scaleCurrentNumber / 100 + ')';
+    }
+  };
+
+  buttonDecreaseSize.addEventListener('click', onChangeSizeButtonClick);
+  buttonIncreaseSize.addEventListener('click', onChangeSizeButtonClick);
 
   effect.addEventListener('change', function (evt) {
     window.imageEditor.currentEffect = evt.target.value;
@@ -77,14 +75,10 @@
     window.imageEditor.resetStyle();
   });
 
-  // new task
-  //  drag slider
 
   effectsPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
-
     var startPosition = evt.clientX;
-
     var onPinMouseMove = function (moveEvt) {
       moveEvt.preventDefault();
       var shift = startPosition - moveEvt.clientX;
@@ -100,7 +94,6 @@
       document.removeEventListener('mousemove', onPinMouseMove);
       document.removeEventListener('mouseup', onPinMouseUp);
     };
-
     document.addEventListener('mousemove', onPinMouseMove);
     document.addEventListener('mouseup', onPinMouseUp);
   });
