@@ -6,17 +6,6 @@
   var MAX_HASHTAG_NUMBER = 5;
 
   window.util = {
-    getRandomNumber: function (min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    },
-
-    generateNaturalSequence: function (count) {
-      var array = [];
-      for (var i = 0; i < count; i++) {
-        array.push(i + 1);
-      }
-      return array;
-    },
 
     shuffleArray: function (array) {
       var temp;
@@ -28,11 +17,6 @@
         array[i] = temp;
       }
       return array;
-    },
-
-    getRandomOfArray: function (array) {
-      var rand = Math.floor(Math.random() * array.length);
-      return array[rand];
     },
 
     ESC_KEYCODE: ESC_KEYCODE,

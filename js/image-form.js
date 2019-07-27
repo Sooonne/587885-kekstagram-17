@@ -70,7 +70,7 @@
 
   var onDataSave = function () {
     var messageSuccess = document.querySelector('#success').content;
-    main.appendChild(messageSuccess);
+    main.appendChild(messageSuccess.cloneNode(true));
     window.closePopupEdit();
 
     messageSuccess = main.querySelector('.success');
@@ -89,7 +89,7 @@
 
   var onSaveError = function () {
     var messageError = document.querySelector('#error').content;
-    main.appendChild(messageError);
+    main.appendChild(messageError.cloneNode(true));
     window.closePopupEdit();
 
     messageError = main.querySelector('.error');

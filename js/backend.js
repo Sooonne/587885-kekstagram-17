@@ -32,6 +32,7 @@
     save: function (data, onLoad, onError) {
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'multipart/form-data';
+      // xhr.contentType = 'multipart/form-data';
 
       xhr.addEventListener('load', function () {
         if (xhr.status === SUCCESS_CODE) {

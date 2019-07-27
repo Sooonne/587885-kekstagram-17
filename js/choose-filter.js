@@ -16,8 +16,7 @@
 
   var sortByComments = function () {
     return window.photos.slice().sort(function (left, right) {
-      var commentsDif = right.comments.length - left.comments.length;
-      return commentsDif;
+      return right.comments.length - left.comments.length;
     });
   };
 
